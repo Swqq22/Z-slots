@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#09070f">
+<title>Z_SLOTS — Switch Arcade</title>
+<style>
+:root{--bg:#09070f;--panel:#15101f;--panel2:#20172d;--gold:#ffd76a;--purple:#b36cff;--pink:#ff5db8;--text:#f7f2ff;--muted:#aaa0b8;--green:#80ffbf;--line:#49365f}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -20%,#3b205a 0,transparent 48%),linear-gradient(180deg,#0b0812,#08070c 65%);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
+button{font:inherit;cursor:pointer;border:0;color:inherit}button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.wrap{width:min(1120px,94vw);margin:auto}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 0}.brand{font-weight:1000;letter-spacing:.12em;font-size:clamp(22px,4vw,34px);text-shadow:0 0 22px #b36cff88}.brand span{color:var(--gold)}.balance{background:#171020;border:1px solid var(--line);border-radius:14px;padding:10px 14px;font-weight:800;color:var(--gold);white-space:nowrap}
+.hero{position:relative;overflow:hidden;border:1px solid #60467b;border-radius:24px;padding:clamp(24px,5vw,48px);background:linear-gradient(110deg,#170f24ed,#1b1030d9 55%,#4c2351bb),url('pirate-banner.jpg') center/cover;box-shadow:0 16px 60px #0008}
+.hero:after{content:"";position:absolute;width:230px;height:230px;border:2px solid #ffd76a33;border-radius:50%;right:-65px;top:-80px;box-shadow:0 0 0 24px #ffd76a0b,0 0 0 48px #ffd76a08}
+.kicker{color:var(--gold);font-size:12px;font-weight:900;letter-spacing:.22em}.hero h1{font-size:clamp(38px,8vw,76px);line-height:.95;margin:12px 0;text-shadow:0 0 24px #b36cff88}.hero p{color:#e4d9f1;max-width:560px;line-height:1.55}.hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.btn{padding:12px 18px;border-radius:12px;font-weight:900;background:linear-gradient(135deg,var(--gold),#ffad45);color:#211326;box-shadow:0 5px 20px #ffb84b33}.btn.secondary{background:#281a38;color:var(--text);border:1px solid #654b7d;box-shadow:none}.btn:disabled{opacity:.45;cursor:not-allowed}
+.section-head{display:flex;justify-content:space-between;align-items:end;gap:12px;margin:30px 0 14px}.section-head h2{margin:0;font-size:23px}.sub{color:var(--muted);font-size:13px}
+.machines{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.machine{background:linear-gradient(160deg,#21172e,#110d18);border:1px solid var(--line);border-radius:18px;padding:18px;min-height:170px;position:relative;overflow:hidden}.machine:before{content:"";position:absolute;inset:auto -30px -80px auto;width:150px;height:150px;border-radius:50%;background:#b36cff17;filter:blur(5px)}.machine h3{margin:0 0 8px;font-size:19px}.machine p{margin:0 0 16px;color:var(--muted);font-size:13px;min-height:38px}.machine .machine-icon{font-size:30px;margin-bottom:8px}.machine .btn{width:100%;position:relative}
+.grid2{display:grid;grid-template-columns:1.15fr .85fr;gap:14px;margin-top:14px}.panel{background:linear-gradient(160deg,#191222,#100c16);border:1px solid var(--line);border-radius:18px;padding:18px}.panel h2,.panel h3{margin:0 0 12px}.daily{display:flex;align-items:center;justify-content:space-between;gap:12px}.daily strong{color:var(--gold);font-size:24px}.shop-items{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.shop-item{background:#21182d;border:1px solid #49365f;border-radius:12px;padding:12px}.shop-item strong{display:block}.shop-item small{color:var(--muted)}.shop-item button{margin-top:9px;width:100%;padding:8px;border-radius:9px;background:#39254e;font-weight:800}.shop-item button:disabled{opacity:.45;cursor:not-allowed}
+.progress{height:9px;background:#30243b;border-radius:99px;overflow:hidden;margin:10px 0}.progress>i{display:block;height:100%;background:linear-gradient(90deg,var(--purple),var(--gold));width:0%}.achievements{display:flex;gap:8px;flex-wrap:wrap}.achievement{font-size:12px;padding:8px 10px;border-radius:10px;background:#21182d;border:1px solid #49365f;color:var(--muted)}.achievement.done{color:var(--green);border-color:#39775c}
+.footer{padding:25px 0 38px;color:#786f84;text-align:center;font-size:12px}
+.modal{position:fixed;inset:0;background:#05030bdc;display:none;align-items:center;justify-content:center;padding:16px;z-index:10}.modal.open{display:flex}.game{width:min(600px,100%);background:linear-gradient(160deg,#251832,#100b17);border:1px solid #76528f;border-radius:22px;padding:20px;box-shadow:0 20px 90px #000b}.game-top{display:flex;justify-content:space-between;align-items:center;gap:10px}.close{background:#33233f;border:1px solid #604675;border-radius:10px;padding:8px 12px}.reels{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:22px 0}.reel{display:grid;place-items:center;min-height:112px;border-radius:15px;background:linear-gradient(180deg,#fff8,#fff0 25%,#0002 75%,#fff2),#21162d;border:2px solid #76528f;font-size:clamp(42px,10vw,62px);box-shadow:inset 0 0 20px #0006,0 5px 20px #0005}.reel.spin{animation:shake .12s linear infinite alternate}@keyframes shake{from{transform:translateY(-3px) rotate(-1deg)}to{transform:translateY(3px) rotate(1deg)}}.game-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.game-actions .btn{flex:1}.result{min-height:28px;text-align:center;font-weight:900;color:var(--gold);margin:10px 0}.game-note{text-align:center;color:var(--muted);font-size:12px}.sound-toggle{background:#21182d;border:1px solid var(--line);border-radius:10px;padding:9px 12px}.room{display:none;margin-top:14px;background:radial-gradient(circle at center,#5b3474,#1b1028 65%,#100b16);border:1px solid var(--gold);border-radius:18px;padding:24px;text-align:center}.room.open{display:block}.room .z{font-size:76px;color:var(--gold);font-weight:1000;text-shadow:0 0 35px #ffd76a}.secrets{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:14px}.secret{background:#120d1caa;border:1px solid #654b7d;border-radius:12px;padding:12px;min-height:74px}.secret button{background:none;width:100%;height:100%;font-weight:900}.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#21172d;border:1px solid var(--gold);border-radius:12px;padding:12px 18px;z-index:20;display:none;box-shadow:0 8px 30px #0008}.toast.show{display:block}
+@media(max-width:720px){.machines{grid-template-columns:1fr}.grid2{grid-template-columns:1fr}.machine{min-height:0}.machine p{min-height:0}.secrets{grid-template-columns:repeat(2,1fr)}.top{align-items:flex-start}.balance{font-size:13px}.hero{border-radius:18px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">Z_<span>SLOTS</span> 🚀</div>
+    <div class="balance">🪙 <span id="balance">1000</span> SC</div>
+  </header>
+
+  <section class="hero">
+    <div class="kicker">WELCOME TO THE SWITCH ARCADE</div>
+    <h1>SPIN YOUR<br><span style="color:var(--gold)">DESTINY.</span></h1>
+    <p>Три автомата. Мемные комбинации. Секреты, которые не должны были найти. Добро пожаловать в Z_SLOTS.</p>
+    <div class="hero-actions">
+      <button class="btn" onclick="openGame('classic')">PLAY NOW</button>
+      <button class="btn secondary" onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})">OPEN Z SHOP</button>
+      <button class="sound-toggle" id="soundToggle" onclick="toggleSound()">🔊 Звук: ВКЛ</button>
+    </div>
+  </section>
+
+  <div class="section-head"><div><h2>CHOOSE YOUR MACHINE</h2><div class="sub">Каждый автомат — отдельный джекпот для THE TRUE Z</div></div></div>
+  <section class="machines">
+    <article class="machine"><div class="machine-icon">🎰</div><h3>Z CLASSIC</h3><p>Золото, казино-классика и легендарные комбинации.</p><button class="btn" onclick="openGame('classic')">ENTER MACHINE</button></article>
+    <article class="machine"><div class="machine-icon">🇷🇺</div><h3>RUSSIAN Z</h3><p>Мемный хаос, неожиданные символы и русский вайб.</p><button class="btn" onclick="openGame('russian')">ENTER MACHINE</button></article>
+    <article class="machine"><div class="machine-icon">👾</div><h3>CHAOS MODE</h3><p>Глитчи, странные звуки и максимально нестабильная эстетика.</p><button class="btn" onclick="openGame('chaos')">ENTER MACHINE</button></article>
+  </section>
+
+  <div class="grid2">
+    <section class="panel">
+      <div class="section-head" style="margin:0 0 12px"><div><h2>🏆 ACHIEVEMENTS</h2><div class="sub">Твой путь к статусу TRUE Z</div></div></div>
+      <div class="achievements" id="achievements"></div>
+      <div class="sub" style="margin-top:13px">THREEFOLD JACKPOT</div>
+      <div class="progress"><i id="jackpotBar"></i></div>
+      <div class="sub" id="jackpotProgress">0 / 3 джекпота</div>
+      <div class="room" id="room">
+        <div class="kicker">SECRET AREA UNLOCKED</div><div class="z">Z</div>
+        <h2>WELCOME, LEGEND.</h2><p>YOU ARE THE CHOSEN Z.</p>
+        <div class="sub" id="secretCount">SECRET DISCOVERIES: 0/6</div>
+        <div class="secrets">
+          <div class="secret"><button onclick="discover(0)">🥚 THE EGG</button></div>
+          <div class="secret"><button onclick="discover(1)">🚫 FORBIDDEN BUTTON</button></div>
+          <div class="secret"><button onclick="discover(2)">404 Z NOT FOUND</button></div>
+          <div class="secret"><button onclick="discover(3)">👑 OLD LEGEND</button></div>
+          <div class="secret"><button onclick="discover(4)">⚡ SECRET COMBO</button></div>
+          <div class="secret"><button onclick="discover(5)">🌀 Z SWITCH</button></div>
+        </div>
+      </div>
+    </section>
+    <section class="panel" id="shop">
+      <h2>🛍️ Z SHOP</h2><div class="sub" style="margin-bottom:12px">Косметические предметы за игровые очки</div>
+      <div class="shop-items" id="shopItems"></div>
+    </section>
+  </div>
+  <section class="panel" style="margin-top:14px">
+    <div class="daily"><div><h2 style="margin:0 0 5px">🎁 DAILY BONUS</h2><div class="sub">Бонус доступен раз в календарный день</div></div><div style="text-align:right"><strong>+100 SC</strong><br><button class="btn" id="dailyBtn" onclick="claimDaily()">CLAIM</button></div></div>
+  </section>
+  <footer class="footer">Z_SLOTS © SWITCH ARCADE · SC — только игровые очки. Вращения бесплатные, реальные деньги не используются.</footer>
+</div>
+
+<div class="modal" id="modal" onclick="if(event.target===this)closeGame()">
+ <div class="game">
+  <div class="game-top"><div><div class="kicker">Z_SLOTS ARCADE</div><h2 id="gameTitle" style="margin:4px 0">Z CLASSIC</h2></div><button class="close" onclick="closeGame()">✕</button></div>
+  <div class="reels"><div class="reel" id="r0">🚀</div><div class="reel" id="r1">🎮</div><div class="reel" id="r2">🔥</div></div>
+  <div class="result" id="result">READY WHEN YOU ARE.</div>
+  <div class="game-actions"><button class="btn" id="spinBtn" onclick="spin()">🎰 SPIN — FREE</button><button class="btn secondary" onclick="closeGame()">BACK</button></div>
+  <p class="game-note">Вращение бесплатное. Switch_Coins начисляются за совпадения и служат игровым счётом.</p>
+ </div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const DEFAULT={coins:1000,jackpots:{classic:false,russian:false,chaos:false},spins:0,wins:0,claimedDate:"",owned:[],equipped:[],secrets:[],eggClicks:0,forbidden:false,oldLegend:false,secretCombo:false,zClicks:0};
+let state={...DEFAULT,...load()};
+function load(){try{return JSON.parse(localStorage.getItem("zslots_save")||"{}")}catch(e){return {}}}
+function save(){localStorage.setItem("zslots_save",JSON.stringify(state));render()}
+function render(){
+ document.getElementById("balance").textContent=state.coins.toLocaleString("ru-RU");
+ const j=Object.values(state.jackpots).filter(Boolean).length;
+ document.getElementById("jackpotProgress").textContent=`${j} / 3 джекпота`;
+ document.getElementById("jackpotBar").style.width=(j/3*100)+"%";
+ document.getElementById("room").classList.toggle("open",j===3);
+ document.getElementById("secretCount").textContent=`SECRET DISCOVERIES: ${state.secrets.length}/6`;
+ const ach=[["FIRST SPIN",state.spins>0],["LUCKY Z",state.wins>0],["THREEFOLD JACKPOT",j===3],["THE TRUE Z",j===3]];
+ document.getElementById("achievements").innerHTML=ach.map(([n,d])=>`<span class="achievement ${d?"done":""}">${d?"✓ ":"🔒 "}${n}</span>`).join("");
+ document.getElementById("dailyBtn").disabled=state.claimedDate===new Date().toLocaleDateString("en-CA");
+ document.getElementById("dailyBtn").textContent=state.claimedDate===new Date().toLocaleDateString("en-CA")?"CLAIMED":"CLAIM";
+ renderShop();
+}
+const shop=[["evil","EVIL Z","Титул","500"],["rocket","ROCKET BOY","Аватар","750"],["royalty","Z ROYALTY","Золотая рамка","2000"],["god","SWITCH GOD","Легендарный титул","5000"]];
+function renderShop(){document.getElementById("shopItems").innerHTML=shop.map(([id,n,d,p])=>`<div class="shop-item"><strong>${n}</strong><small>${d} · ${Number(p).toLocaleString("en-US")} SC</small><button ${state.owned.includes(id)?"disabled":state.coins<Number(p)?"disabled":""} onclick="buy('${id}',${p})">${state.owned.includes(id)?"OWNED":"BUY"}</button></div>`).join("")}
+function toast(t){const el=document.getElementById("toast");el.textContent=t;el.classList.add("show");setTimeout(()=>el.classList.remove("show"),2300)}
+function buy(id,p){if(state.owned.includes(id)||state.coins<p)return;state.coins-=p;state.owned.push(id);save();sfx("buy");toast("PURCHASED — "+id.toUpperCase())}
+function claimDaily(){let today=new Date().toLocaleDateString("en-CA");if(state.claimedDate===today)return;state.claimedDate=today;state.coins+=100;save();sfx("win");toast("+100 SWITCH_COINS")}
+function discover(i){if(Object.values(state.jackpots).filter(Boolean).length<3)return;const names=["THE EGG","FORBIDDEN BUTTON","404 Z NOT FOUND","OLD LEGEND","SECRET COMBO","Z SWITCH"];if(state.secrets.includes(i)){toast("YOU ALREADY FOUND THIS SECRET.");return}state.secrets.push(i);if(i===0)toast("THE EGG HAS BEEN FOUND. 🥚");if(i===1)toast("YOU PRESSED IT. NOTHING CAN SAVE YOU.");if(i===2)toast("ERROR 404: NORMALITY NOT FOUND.");if(i===3)toast("THE OLD LEGEND NEVER DIES.");if(i===4)toast("COMBO ACCEPTED. CHAOS +1.");if(i===5)toast("Z SWITCH ACTIVATED.");save();sfx("secret")}
+let current="classic",soundOn=true,audioCtx=null,spinning=false;
+const machineData={
+ classic:{title:"Z CLASSIC",symbols:["🚀","🎮","🤣","🎱","🔥","🥚","💎"]},
+ russian:{title:"RUSSIAN Z",symbols:["🇷🇺","🥟","🕌","🍆","🤣","🚀","🐻"]},
+ chaos:{title:"CHAOS MODE",symbols:["😈","👾","⚡","🌀","🔥","🍆","💀"]}
+};
+function openGame(id){current=id;document.getElementById("gameTitle").textContent=machineData[id].title;document.getElementById("result").textContent="READY WHEN YOU ARE.";document.getElementById("modal").classList.add("open");sfx("open")}
+function closeGame(){document.getElementById("modal").classList.remove("open")}
+function audio(){if(!audioCtx){const AC=window.AudioContext||window.webkitAudioContext;if(AC)audioCtx=new AC()}if(audioCtx&&audioCtx.state==="suspended")audioCtx.resume();return audioCtx}
+function tone(freq,dur,type="sine",vol=.045,delay=0){if(!soundOn)return;const c=audio();if(!c)return;const o=c.createOscillator(),g=c.createGain();o.type=type;o.frequency.setValueAtTime(freq,c.currentTime+delay);g.gain.setValueAtTime(.0001,c.currentTime+delay);g.gain.exponentialRampToValueAtTime(vol,c.currentTime+delay+.012);g.gain.exponentialRampToValueAtTime(.0001,c.currentTime+delay+dur);o.connect(g);g.connect(c.destination);o.start(c.currentTime+delay);o.stop(c.currentTime+delay+dur+.03)}
+function sfx(kind){if(!soundOn)return;if(kind==="open"){tone(440,.08,"triangle");tone(660,.12,"triangle",.04,.08)}if(kind==="spin"){for(let i=0;i<5;i++)tone(180+i*35,.055,"square",.018,i*.055)}if(kind==="tick")tone(300+Math.random()*180,.035,"square",.015);if(kind==="win"){[523,659,784,1047].forEach((f,i)=>tone(f,.18,"triangle",.05,i*.09))}if(kind==="jackpot"){[392,523,659,784,1047,1318].forEach((f,i)=>tone(f,.28,"sawtooth",.045,i*.12))}if(kind==="buy"){tone(660,.08);tone(880,.12,"triangle",.04,.08)}if(kind==="secret"){tone(880,.12,"sine");tone(1175,.2,"sine",.04,.12)}}
+function toggleSound(){soundOn=!soundOn;document.getElementById("soundToggle").textContent=soundOn?"🔊 Звук: ВКЛ":"🔇 Звук: ВЫКЛ";if(soundOn){audio();sfx("win")}}
+function spin(){
+ if(spinning)return;spinning=true;const btn=document.getElementById("spinBtn");btn.disabled=true;document.getElementById("result").textContent="SPINNING...";
+ const els=[0,1,2].map(i=>document.getElementById("r"+i));els.forEach(e=>e.classList.add("spin"));sfx("spin");
+ const symbols=machineData[current].symbols;let result=[];
+ let ticks=0;const timer=setInterval(()=>{els.forEach((e)=>{e.textContent=symbols[Math.floor(Math.random()*symbols.length)]});sfx("tick");ticks++;if(ticks>=13){clearInterval(timer);finishSpin(els,symbols)}},95);
+}
+function finishSpin(els,symbols){
+ let result=els.map(e=>e.textContent);const roll=Math.random();
+ if(roll<.085){const s=symbols[Math.floor(Math.random()*symbols.length)];result=[s,s,s]}
+ else if(roll<.29){const s=symbols[Math.floor(Math.random()*symbols.length)],t=symbols[Math.floor(Math.random()*symbols.length)];result=[s,s,t]}
+ els.forEach((e,i)=>{e.textContent=result[i];e.classList.remove("spin")});
+ state.spins++;let msg="",reward=0;
+ if(result[0]===result[1]&&result[1]===result[2]){
+   reward=500;msg="💥 JACKPOT! +500 SC";state.wins++;
+   if(!state.jackpots[current]){state.jackpots[current]=true;msg+=" · MACHINE CLEARED!"}
+   sfx("jackpot");
+ }else if(result[0]===result[1]||result[1]===result[2]||result[0]===result[2]){reward=100;msg="NICE MATCH! +100 SC";state.wins++;sfx("win")}
+ else {msg="NO MATCH — TRY AGAIN!";sfx("tick")}
+ state.coins+=reward;save();document.getElementById("result").textContent=msg;
+ if(Object.values(state.jackpots).every(Boolean))toast("Z ROOM UNLOCKED. THE TRUE Z. 👑");
+ spinning=false;document.getElementById("spinBtn").disabled=false;
+}
+document.addEventListener("keydown",e=>{if(e.key.toLowerCase()==="z"&&!document.getElementById("modal").classList.contains("open")){state.zClicks++;if(state.zClicks>=7){state.zClicks=0;if(!state.secrets.includes(5)&&Object.values(state.jackpots).every(Boolean))discover(5);else toast("Z... Z... Z...");}}if(e.key==="Escape")closeGame();if(e.key.toLowerCase()==="s"&&e.altKey){state.secretCombo=true;if(Object.values(state.jackpots).every(Boolean)&&!state.secrets.includes(4))discover(4)}});
+let eggCount=0;document.querySelector(".brand").addEventListener("click",()=>{eggCount++;if(eggCount===7){eggCount=0;toast("Z SWITCH — SECRET SIGNAL DETECTED.");sfx("secret")}});
+render();
+</script>
+</body>
+</html>
